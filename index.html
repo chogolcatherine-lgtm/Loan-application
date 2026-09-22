@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Application</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222}
+.container{max-width:480px;min-height:100vh;margin:auto;background:white;padding:25px 20px}
+.logo{text-align:center;font-size:24px;font-weight:bold;margin-bottom:35px}
+h1{font-size:27px;margin-bottom:12px}
+h2{font-size:22px;margin-bottom:20px}
+p{line-height:1.5;color:#555}
+.step{display:none}
+.step.active{display:block}
+.progress{height:6px;background:#e5e5e5;border-radius:10px;margin-bottom:30px}
+.progress-bar{height:100%;width:14%;background:#168a45;border-radius:10px;transition:width .3s}
+input,select,textarea{width:100%;padding:14px;margin-top:8px;margin-bottom:18px;border:1px solid #ccc;border-radius:8px;font-size:16px}
+label{font-weight:bold;display:block}
+button{width:100%;padding:15px;border:0;border-radius:8px;background:#168a45;color:white;font-size:17px;font-weight:bold;margin-top:10px}
+.back{background:#777}
+.loan-type{display:block;border:1px solid #ddd;padding:16px;margin-bottom:12px;border-radius:8px}
+.loan-type input{width:auto;margin:0 10px 0 0}
+.review{background:#f7f7f7;padding:15px;border-radius:8px;margin-bottom:20px}
+.note{font-size:13px;color:#666;margin-top:20px}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">Loan Application</div>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- STEP 1 -->
+<div class="step active">
+<h1>Get loans easily</h1>
+<p>Complete the application below to get started. The process is simple and takes only a few steps.</p>
+<button onclick="nextStep()">START APPLICATION</button>
+</div>
+
+<!-- STEP 2 -->
+<div class="step">
+<h2>Choose loan type</h2>
+
+<label class="loan-type">
+<input type="radio" name="loanType" value="Business Loan">
+Business Loan
+</label>
+
+<label class="loan-type">
+<input type="radio" name="loanType" value="Personal Loan">
+Personal Loan
+</label>
+
+<label class="loan-type">
+<input type="radio" name="loanType" value="Other">
+Other
+</label>
+
+<button onclick="nextStep()">NEXT STEP</button>
+<button class="back" onclick="previousStep()">BACK</button>
+</div>
+
+<!-- STEP 3 -->
+<div class="step">
+<h2>Loan details</h2>
+
+<label>Loan amount</label>
+<input type="number" id="amount" placeholder="Enter amount">
+
+<label>Loan term</label>
+<select id="term">
+<option value="">Select loan term</option>
+<option>1 month</option>
+<option>3 months</option>
+<option>6 months</option>
+<option>12 months</option>
+<option>24 months</option>
+</select>
+
+<label>Purpose of loan</label>
+<textarea id="purpose" rows="4" placeholder="Tell us what the loan will be used for"></textarea>
+
+<button onclick="nextStep()">NEXT STEP</button>
+<button class="back" onclick="previousStep()">BACK</button>
+</div>
+
+<!-- STEP 4 -->
+<div class="step">
+<h2>Your details</h2>
+
+<label>Full name</label>
+<input type="text" id="name" placeholder="Enter your full name">
+
+<label>Mobile number</label>
+<input type="tel" id="phone" placeholder="Enter your mobile number">
+
+<button onclick="nextStep()">NEXT STEP</button>
+<button class="back" onclick="previousStep()">BACK</button>
+</div>
+
+<!-- STEP 5 -->
+<div class="step">
+<h2>Verify your identity</h2>
+
+<p>
+Please continue to the official verification process to confirm your identity.
+</p>
+
+<button onclick="nextStep()">VERIFY & CONTINUE</button>
+<button class="back" onclick="previousStep()">BACK</button>
+
+<p class="note">
+For your security, never enter your PIN, password, or one-time authentication
+code into this webpage.
+</p>
+</div>
+
+<!-- STEP 6 -->
+<div class="step">
+<h2>Review application</h2>
+
+<div class="review">
+<p><strong>Loan type:</strong> <span id="reviewType"></span></p>
+<p><strong>Loan amount:</strong> <span id="reviewAmount"></span></p>
+<p><strong>Loan term:</strong> <span id="reviewTerm"></span></p>
+<p><strong>Purpose:</strong> <span id="reviewPurpose"></span></p>
+<p><strong>Name:</strong> <span id="reviewName"></span></p>
+<p><strong>Phone:</strong> <span id="reviewPhone"></span></p>
+</div>
+
+<button onclick="submitApplication()">SUBMIT APPLICATION</button>
+<button class="back" onclick="previousStep()">BACK</button>
+</div>
+
+<!-- STEP 7 -->
+<div class="step">
+<h1>Application Submitted</h1>
+
+<p>Your application has been received successfully.</p>
+
+<p>Please follow the instructions provided to continue with the application process.</p>
+</div>
+
+</div>
+
+<script>
+
+let currentStep=0;
+const steps=document.querySelectorAll(".step");
+const progressBar=document.getElementById("progressBar");
+
+function showStep(){
+steps.forEach((step,index)=>{
+step.classList.toggle("active",index===currentStep);
+});
+let progress=((currentStep+1)/steps.length)*100;
+progressBar.style.width=progress+"%";
+}
+
+function nextStep(){
+
+if(currentStep===1){
+let selected=document.querySelector('input[name="loanType"]:checked');
+if(!selected){
+alert("Please choose a loan type.");
+return;
+}
+}
+
+if(currentStep===2){
+if(
+document.getElementById("amount").value==="" ||
+document.getElementById("term").value==="" ||
+document.getElementById("purpose").value===""
+){
+alert("Please complete all loan details.");
+return;
+}
+}
+
+if(currentStep===3){
+if(
+document.getElementById("name").value==="" ||
+document.getElementById("phone").value===""
+){
+alert("Please enter your name and mobile number.");
+return;
+}
+}
+
+if(currentStep<steps.length-1){
+currentStep++;
+
+if(currentStep===5){
+createReview();
+}
+
+showStep();
+}
+}
+
+function previousStep(){
+if(currentStep>0){
+currentStep--;
+showStep();
+}
+}
+
+function createReview(){
+
+let type=document.querySelector('input[name="loanType"]:checked');
+
+document.getElementById("reviewType").textContent=type?type.value:"";
+document.getElementById("reviewAmount").textContent=document.getElementById("amount").value;
+document.getElementById("reviewTerm").textContent=document.getElementById("term").value;
+document.getElementById("reviewPurpose").textContent=document.getElementById("purpose").value;
+document.getElementById("reviewName").textContent=document.getElementById("name").value;
+document.getElementById("reviewPhone").textContent=document.getElementById("phone").value;
+}
+
+function submitApplication(){
+currentStep=6;
+showStep();
+}
+
+showStep();
+
+</script>
+
+</body>
+  </html>
