@@ -63,8 +63,13 @@ Status: Pending Admin Approval`;
       }
     );
 
+    const telegramResult = await telegramResponse.text();
+
+    console.log("Telegram HTTP status:", telegramResponse.status);
+    console.log("Telegram response:", telegramResult);
+
     if (!telegramResponse.ok) {
-      throw new Error("Telegram notification failed");
+      throw new Error("Telegram rejected the message");
     }
 
     res.json({
@@ -74,17 +79,16 @@ Status: Pending Admin Approval`;
 
   } catch (error) {
 
-    console.error("Telegram error:", error);
+    console.error("Telegram error:", error.message);
 
     res.status(500).json({
       success: false,
-      error: "Could not send application notification"
+      error: "Telegram notification failed"
     });
 
   }
 
 });
-
 
 app.post("/message", (req, res) => {
 
@@ -94,7 +98,6 @@ app.post("/message", (req, res) => {
   });
 
 });
-
 
 const PORT = process.env.PORT || 3000;
 
